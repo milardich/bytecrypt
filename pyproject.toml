@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bytecrypt"
+version = "0.0.2"
+description = "Easily encrypt/decrypt bytes with password"
+readme = "README.md"
+license = { file = "LICENSE" }
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+keywords = ["encrypt", "decrypt", "bytecrypt"]
+
+dependencies = [
+    "cryptography",
+]
+
+requires-python = ">=3.9"
+
+[project.scripts]
+realpython = "bytecrypt.__main__:main"

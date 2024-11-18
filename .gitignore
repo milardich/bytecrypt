@@ -4,3 +4,5 @@ __pycache__
 [Ss]cripts
 pyvenv.cfg
 .venv
+dist/
+src/bytecrypt.egg*
