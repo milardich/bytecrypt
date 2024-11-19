@@ -3,6 +3,7 @@ import base64
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 import random
+import os
 
 def generate_salt() -> bytes:
     characters = "AaBbCcDdEeF_fGgHhIiJjKk_LlMmNnOoPpQq_RrSsTt_UuVv_WwXxYyZ-z01_2345-6_789"
@@ -35,3 +36,51 @@ def decrypt_bytes(content: bytes, password: bytes) -> bytes:
     key = generate_key(password, salt)
     f = Fernet(key)
     return f.decrypt(encrypted_content)
+
+
+def encrypt_directory(path: str, password: bytes | str):
+    # dir name to bytes and call encrypt_bytes
+    print("encrypting dir")
+    pass
+
+
+def encrypt_file(path: str, password: bytes | str):
+    print("\nInfo: Encrypting file " + path)
+    if (os.path.isfile(path)):
+        f = open(path, "r+")
+        content = bytes(f.read(), encoding="utf-8")
+        encrypted = encrypt_bytes(content, password)
+        try:
+            f.seek(0)
+            f.write(encrypted.decode("utf-8"))
+            f.truncate()
+            f.close()
+            print("Info: encrypted bytes written successfully")
+        except IOError as err:
+            print("\n" + err)
+    else:
+        raise TypeError("\n" + path + " is not a file or it doesnt exist.")
+
+
+def decrypt_file(path: str, password: bytes | str):
+    print("\nInfo: Decrypting file " + path)
+    if (os.path.isfile(path)):
+        f = open(path, "r+")
+        content = bytes(f.read(), encoding="utf-8")
+        decrypted = decrypt_bytes(content, password)
+        try:
+            f.seek(0)
+            f.write(decrypted.decode("utf-8"))
+            f.truncate()
+            f.close()
+            print("Info: decrypted bytes written successfully")
+        except IOError as err:
+            print("\n" + err)
+    else:
+        raise TypeError("\n" + path + " is not a file or it doesnt exist.")
+
+
+def encrypt_string(string: str, password: bytes | str):
+    # dir name to bytes and call encrypt_bytes
+    print("encrypting string")
+    pass
