@@ -1,5 +1,5 @@
-from bytecrypt.bytecrypt import encrypt_bytes
-from bytecrypt.bytecrypt import decrypt_bytes
+from bytecrypt import encrypt_bytes
+from bytecrypt import decrypt_bytes
 import sys
 
 test_password = b"test123"
@@ -31,11 +31,11 @@ def main():
     # python -m bytecrypt -decrypt -dir ["tYWHbf_...2dHSL="] -password "test123"
     # python -m bytecrypt -encrypt -dir . -password "test123"
 
-    arg_content = sys.argv[1]
-    arg_pass = sys.argv[2]
-    arg_content_bytes = bytes(arg_content, encoding="utf-8")
-    arg_pass_bytes = bytes(arg_pass, encoding="utf-8")
-    encrypted_content = encrypt_bytes(arg_content_bytes, arg_pass_bytes)
+    # arg_content = sys.argv[1]
+    # arg_pass = sys.argv[2]
+    # arg_content_bytes = bytes(arg_content, encoding="utf-8")
+    # arg_pass_bytes = bytes(arg_pass, encoding="utf-8")
+    # encrypted_content = encrypt_bytes(arg_content_bytes, arg_pass_bytes)
     #print("Cmd arg encrypted: " + arg_content + " -> " + str(encrypted_content.decode("utf-8")))
 
     example = encrypt_bytes(test_content, test_password)

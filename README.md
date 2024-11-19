@@ -6,8 +6,8 @@ Bytecrypt is a python package for easy data encryption / decryption with passwor
 
 # main.py
 
-from bytecrypt.bytecrypt import encrypt_bytes
-from bytecrypt.bytecrypt import decrypt_bytes
+from bytecrypt import encrypt_bytes
+from bytecrypt import decrypt_bytes
 
 encrypted_data = encrypt_bytes(b"secret", b"password")
 decrypted_data = decrypt_bytes(encrypted_data, b"password")
@@ -27,3 +27,4 @@ Encrypted data: gAAAAABnO7wzHm-WLv-s_fQgHRe_-0Al_CmzUU7XfZcRaRSBXbLy1j8Z97KhiY8n
 Decrypted data: secret
 
 ```
+
