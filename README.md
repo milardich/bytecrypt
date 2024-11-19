@@ -1,5 +1,5 @@
 ### About
-Bytecript is a python package for easy data encryption / decryption with password.
+Bytecrypt is a python package for easy data encryption / decryption with password.
 
 ### Usage
 ```py

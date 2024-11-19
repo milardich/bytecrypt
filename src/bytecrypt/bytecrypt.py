@@ -2,11 +2,10 @@ from cryptography.fernet import Fernet
 import base64
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-import os
 import random
 
 def generate_salt() -> bytes:
-    characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    characters = "AaBbCcDdEeF_fGgHhIiJjKk_LlMmNnOoPpQq_RrSsTt_UuVv_WwXxYyZ-z01_2345-6_789"
     salt = "";
     for i in range(16):
         salt = salt + random.choice(characters)
@@ -15,7 +14,7 @@ def generate_salt() -> bytes:
 
 def generate_key(password: bytes, salt: bytes) -> bytes:
     kdf = PBKDF2HMAC(
-        algorithm=hashes.SHA256(),
+        algorithm=hashes.SHA512(),
         length=32,
         salt=salt,
         iterations=1000
