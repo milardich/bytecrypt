@@ -4,6 +4,7 @@ from bytecrypt import encrypt_directory
 from bytecrypt import encrypt_file
 from bytecrypt import decrypt_file
 from bytecrypt import encrypt_string
+from bytecrypt import decrypt_string
 from argparse import ArgumentParser
 import sys
 
@@ -28,11 +29,11 @@ def init_argparse() -> ArgumentParser:
 
 def process_encrypting(args):
     if (args.directory and not args.file and not args.string):
-        encrypt_directory(args.directory, test_password)
+        encrypt_directory(args.directory, bytes(args.password, encoding="utf-8"))
     elif (args.file and not args.directory and not args.string):
-        encrypt_file(args.file, test_password)
+        encrypt_file(args.file, bytes(args.password, encoding="utf-8"))
     elif (args.string and not args.directory and not args.file):
-        encrypt_string(args.string, test_password)
+        encrypt_string(args.string, bytes(args.password, encoding="utf-8"))
     else:
         print("\nWarning: passed more than one data argument (-dir, -file, -str)")
 
@@ -41,9 +42,9 @@ def process_decrypting(args):
     if (args.directory and not args.file and not args.string):
         pass
     elif (args.file and not args.directory and not args.string):
-        decrypt_file(args.file, test_password)
+        decrypt_file(args.file, bytes(args.password, encoding="utf-8"))
     elif (args.string and not args.directory and not args.file):
-        pass
+        decrypt_string(args.string, bytes(args.password, encoding="utf-8"))
     else:
         print("\nWarning: passed more than one data argument (-dir, -file, -str)")
 

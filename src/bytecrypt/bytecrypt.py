@@ -4,7 +4,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 import random
 import os
-import mimetypes
+
 
 def generate_salt() -> bytes:
     characters = "AaBbCcDdEeF_fGgHhIiJjKk_LlMmNnOoPpQq_RrSsTt_UuVv_WwXxYyZ-z01_2345-6_789"
@@ -39,10 +39,15 @@ def decrypt_bytes(content: bytes, password: bytes) -> bytes:
     return f.decrypt(encrypted_content)
 
 
-def encrypt_directory(path: str, password: bytes | str):
-    # dir name to bytes and call encrypt_bytes
-    print("encrypting dir")
-    pass
+def overwrite_file(file, content):
+    try:
+        file.seek(0)
+        file.write(content)
+        file.truncate()
+        file.close()
+        print("Info: encrypted bytes written successfully")
+    except IOError as err:
+        print("\n" + err)
 
 
 def encrypt_file(path: str, password: bytes | str):
@@ -51,14 +56,7 @@ def encrypt_file(path: str, password: bytes | str):
         f = open(path, "r+b")
         content = f.read()
         encrypted = encrypt_bytes(content, password)
-        try:
-            f.seek(0)
-            f.write(encrypted)
-            f.truncate()
-            f.close()
-            print("Info: encrypted bytes written successfully")
-        except IOError as err:
-            print("\n" + err)
+        overwrite_file(f, encrypted)
     else:
         raise TypeError("\n" + path + " is not a file or it doesnt exist.")
 
@@ -69,19 +67,24 @@ def decrypt_file(path: str, password: bytes | str):
         f = open(path, "r+b")
         content = f.read()
         decrypted = decrypt_bytes(content, password)
-        try:
-            f.seek(0)
-            f.write(decrypted)
-            f.truncate()
-            f.close()
-            print("Info: decrypted bytes written successfully")
-        except IOError as err:
-            print("\n" + err)
+        overwrite_file(f, decrypted)
     else:
         raise TypeError("\n" + path + " is not a file or it doesnt exist.")
 
 
 def encrypt_string(string: str, password: bytes | str):
+    encrypted = encrypt_bytes(string.encode("utf-8"), password)
+    print("\nUTF-8:\n" + encrypted.decode("utf-8"))
+    print("\nHEX:\n" + encrypted.hex())
+
+
+def decrypt_string(string: str, password: bytes | str):
+    decrypted = decrypt_bytes(string.encode("utf-8"), password)
+    print("\nUTF-8:\n" + decrypted.decode("utf-8"))
+    print("\nHEX:\n" + decrypted.hex())
+
+
+def encrypt_directory(path: str, password: bytes | str):
     # dir name to bytes and call encrypt_bytes
-    print("encrypting string")
+    print("encrypting dir")
     pass
