@@ -14,7 +14,8 @@ from .bytecrypt import (
 __version__ = "0.0.0"
 data = None
 
-with open("../../pyproject.toml") as f:
+with open("pyproject.toml", "rb") as f:
     data = tomllib.load(f)
 
-__version__ = data.get("version")
+__version__ = data['project']['version']
+print("\nversion: " + str(__version__))
