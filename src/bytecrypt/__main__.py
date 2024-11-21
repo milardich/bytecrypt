@@ -58,6 +58,17 @@ def process_decrypting(args):
         print("\nWarning: passed more than one data argument (-dir, -file, -str)")
 
 
+def print_example():
+    print("\nEncryption examples:")
+    print("bytecrypt -e -f test.txt -p testpassword")
+    print("bytecrypt -e -dir example/dir/test -p testpassword")
+    print("bytecrypt -e -s \"secret text\" -p testpassword")
+    print("\nDecryption examples:")
+    print("bytecrypt -d -f test.txt -p testpassword")
+    print("bytecrypt -d -dir example/dir/test -p testpassword")
+    print("bytecrypt -d -s \"EiDXFN...yUW0=\" -p testpassword")
+
+
 def main():
     parser = init_argparse()
     args = parser.parse_args()
@@ -67,8 +78,15 @@ def main():
         process_encrypting(args)
     elif (args.decrypt and not args.encrypt):
         process_decrypting(args)
+    elif (not args.decrypt and not args.encrypt):
+        print("\nWarning: missing -d DECRYPT or -e ENCRYPT flag.")
+        print_example()
+    elif (not args.file and not args.directory and not args.string):
+        print("\nWarning: missing -f FILE, -dir DIRECTORY or -str STRING option.")
+        print_example()
     else:
-        print("\nWarning: passed both encrypt and decrypt flags.")
+        print("\nWarning: passed both -e ENCRYPT and -d DECRYPT flag.")
+        print_example()
 
 
 if __name__ == "__main__":
