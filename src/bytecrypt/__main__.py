@@ -1,16 +1,12 @@
 from bytecrypt import encrypt_bytes
 from bytecrypt import decrypt_bytes
 from bytecrypt import encrypt_directory
+from bytecrypt import decrypt_directory
 from bytecrypt import encrypt_file
 from bytecrypt import decrypt_file
 from bytecrypt import encrypt_string
 from bytecrypt import decrypt_string
 from argparse import ArgumentParser
-import sys
-
-test_password = b"test123"
-test_content = b"very secret thing"
-
 
 
 def init_argparse() -> ArgumentParser:
@@ -22,6 +18,11 @@ def init_argparse() -> ArgumentParser:
     parser.add_argument('-d', '--decrypt', action='store_true')
     parser.add_argument('-f', '--file')
     parser.add_argument('-dir', '--directory')
+
+    # TODO: directory encryption stuff
+    parser.add_argument('-ef', '--encrypt-filename', action='store_true')
+    parser.add_argument('-r', '--recursive', action='store_true')
+
     parser.add_argument('-str', '--string')
     parser.add_argument('-p', '--password', required=True)
     return parser
@@ -40,7 +41,7 @@ def process_encrypting(args):
 
 def process_decrypting(args):
     if (args.directory and not args.file and not args.string):
-        pass
+        decrypt_directory(args.directory, bytes(args.password, encoding="utf-8"))
     elif (args.file and not args.directory and not args.string):
         decrypt_file(args.file, bytes(args.password, encoding="utf-8"))
     elif (args.string and not args.directory and not args.file):

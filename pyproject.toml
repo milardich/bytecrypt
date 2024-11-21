@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bytecrypt"
-version = "0.0.6"
+version = "0.1.1"
 description = "Easily encrypt/decrypt bytes with password"
 readme = "README.md"
 license = { file = "LICENSE" }

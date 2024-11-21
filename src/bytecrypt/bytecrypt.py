@@ -85,6 +85,12 @@ def decrypt_string(string: str, password: bytes | str):
 
 
 def encrypt_directory(path: str, password: bytes | str):
-    # dir name to bytes and call encrypt_bytes
-    print("encrypting dir")
-    pass
+    files = os.listdir(path)
+    for file in files:
+        encrypt_file(path + "/" + file, password)
+
+
+def decrypt_directory(path: str, password: bytes | str):
+    files = os.listdir(path)
+    for file in files:
+        decrypt_file(path + "/" + file, password)
