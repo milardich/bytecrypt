@@ -1,3 +1,5 @@
+import tomllib
+
 from .bytecrypt import (
     encrypt_bytes, 
     decrypt_bytes, 
@@ -9,4 +11,10 @@ from .bytecrypt import (
     decrypt_string,
 ) 
 
-__version__ = "0.1.1"
+__version__ = "0.0.0"
+data = None
+
+with open("../../pyproject.toml") as f:
+    data = tomllib.load(f)
+
+__version__ = data.get("version")
