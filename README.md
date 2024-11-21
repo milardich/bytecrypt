@@ -1,6 +1,13 @@
 ### About
 Bytecrypt is a python package for easy data encryption / decryption with password.
 
+### Installation
+```sh
+
+pip install bytecrypt
+
+```
+
 ### Usage
 
 #### Example 1
@@ -52,17 +59,17 @@ decrypt_directory("path/to/directory", b"testPassword")
 
 ```sh
 
-    # encrypt/decrypt files
-    python -m bytecrypt -e -f "test_file.txt" -p "test123"
+# encrypt/decrypt files
+python -m bytecrypt -e -f "test_file.txt" -p "test123"
 
-    # encrypt/decrypt string
-    python -m bytecrypt -e -str "test_string-1234" -p "test123"
-    python -m bytecrypt -d -str "tYWHbf_...2dHSL=" -p "test123"
+# encrypt/decrypt string
+python -m bytecrypt -e -str "test_string-1234" -p "test123"
+python -m bytecrypt -d -str "tYWHbf_...2dHSL=" -p "test123"
 
-    # encrypt/decrypt files in directory
-    python -m bytecrypt -e -dir "test/directory1" -p "test123"
-    python -m bytecrypt -d -dir "test/directory1" -p "test123"
-    python -m bytecrypt -e -dir . -p "test123"
+# encrypt/decrypt files in directory
+python -m bytecrypt -e -dir "test/directory1" -p "test123"
+python -m bytecrypt -d -dir "test/directory1" -p "test123"
+python -m bytecrypt -e -dir . -p "test123"
 
 ```
 
@@ -71,15 +78,11 @@ decrypt_directory("path/to/directory", b"testPassword")
 
 ```sh
 
-    -e    ;    --encrypt
-    -d    ;    --decrypt
-    -f    ;    --file
-    -dir  ;    --directory
-    -str  ;    --string
-    -p    ;    --password
+-e    ;    --encrypt
+-d    ;    --decrypt
+-f    ;    --file
+-dir  ;    --directory
+-str  ;    --string
+-p    ;    --password
 
 ```
-
-### About
-
-#### -
