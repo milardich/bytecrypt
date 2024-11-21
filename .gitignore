@@ -6,3 +6,5 @@ pyvenv.cfg
 .venv
 dist/
 src/bytecrypt.egg*
+build
+*.spec
