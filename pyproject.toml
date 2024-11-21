@@ -13,7 +13,7 @@ classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
 ]
-keywords = ["encrypt", "decrypt", "bytecrypt"]
+keywords = ["encrypt", "decrypt", "bytecrypt", "encryption", "decryption"]
 
 dependencies = [
     "cryptography",
