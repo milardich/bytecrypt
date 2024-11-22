@@ -39,7 +39,7 @@ def init_argparse() -> ArgumentParser:
 
 def process_encrypting(args):
     if (args.directory and not args.file and not args.string):
-        encrypt_directory(args.directory, bytes(args.password, encoding="utf-8"))
+        encrypt_directory(args.directory, bytes(args.password, encoding="utf-8"), args.encrypt_filename)
     elif (args.file and not args.directory and not args.string):
         encrypt_file(args.file, bytes(args.password, encoding="utf-8"), args.encrypt_filename)
     elif (args.string and not args.directory and not args.file):
@@ -50,7 +50,7 @@ def process_encrypting(args):
 
 def process_decrypting(args):
     if (args.directory and not args.file and not args.string):
-        decrypt_directory(args.directory, bytes(args.password, encoding="utf-8"))
+        decrypt_directory(args.directory, bytes(args.password, encoding="utf-8"), args.decrypt_filename)
     elif (args.file and not args.directory and not args.string):
         decrypt_file(args.file, bytes(args.password, encoding="utf-8"), args.decrypt_filename)
     elif (args.string and not args.directory and not args.file):

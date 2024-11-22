@@ -126,13 +126,13 @@ def decrypt_string(string: str, password: bytes | str):
     print("\nHEX:\n" + decrypted.hex())
 
 
-def encrypt_directory(path: str, password: bytes | str):
+def encrypt_directory(path: str, password: bytes | str, encrypt_name=False):
     files = os.listdir(path)
     for file in files:
-        encrypt_file(path + "/" + file, password)
+        encrypt_file(path + "/" + file, password, encrypt_name)
 
 
-def decrypt_directory(path: str, password: bytes | str):
+def decrypt_directory(path: str, password: bytes | str, decrypt_name=False):
     files = os.listdir(path)
     for file in files:
-        decrypt_file(path + "/" + file, password)
+        decrypt_file(path + "/" + file, password, decrypt_name)
