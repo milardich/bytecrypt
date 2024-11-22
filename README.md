@@ -47,9 +47,15 @@ Decrypted data: secret
 encrypt_file("path/to/file/test.docx", b"testPassword")
 decrypt_file("path/to/file/test.docx", b"testPassword")
 
+encrypt_file("path/to/file/test.docx", b"testPassword", encrypt_filename=True)
+decrypt_file("path/to/file/test.docx", b"testPassword", decrypt_filename=True)
+
 # files in directory
 encrypt_directory("path/to/directory", b"testPassword")
 decrypt_directory("path/to/directory", b"testPassword")
+
+encrypt_directory("path/to/directory", b"testPassword", encrypt_filename=True)
+decrypt_directory("path/to/directory", b"testPassword", decrypt_filename=True)
 
 
 ```
@@ -59,17 +65,28 @@ decrypt_directory("path/to/directory", b"testPassword")
 
 ```sh
 
-# encrypt/decrypt files
-python -m bytecrypt -e -f "test_file.txt" -p "test123"
+# encrypt file contents
+bytecrypt -e -f "test_file.txt" -p "test123"
+
+# decrypt file contents
+bytecrypt -d -f "test_file.txt" -p "test123"
+
+# encrypt file name and its contents
+bytecrypt -e -f "test_file.txt" -efn -p "test123"
+
+# decrypt file name and its contents
+bytecrypt -d -f "EJHF2_1bf...FHJ=" -dfn -p "test123"
 
 # encrypt/decrypt string
-python -m bytecrypt -e -str "test_string-1234" -p "test123"
-python -m bytecrypt -d -str "tYWHbf_...2dHSL=" -p "test123"
+bytecrypt -e -str "test_string-1234" -p "test123"
+bytecrypt -d -str "tYWHbf_...2dHSL=" -p "test123"
 
 # encrypt/decrypt files in directory
-python -m bytecrypt -e -dir "test/directory1" -p "test123"
-python -m bytecrypt -d -dir "test/directory1" -p "test123"
-python -m bytecrypt -e -dir . -p "test123"
+bytecrypt -e -dir "test/directory1" -p "test123"
+bytecrypt -d -dir "test/directory1" -p "test123"
+bytecrypt -e -dir . -p "test123"
+bytecrypt -e -dir . -p -efn "test123"
+bytecrypt -d -dir . -p -dfn "test123"
 
 ```
 
@@ -78,11 +95,13 @@ python -m bytecrypt -e -dir . -p "test123"
 
 ```sh
 
--e    ;    --encrypt
--d    ;    --decrypt
--f    ;    --file
--dir  ;    --directory
--str  ;    --string
--p    ;    --password
+-e      ;   --encrypt
+-d      ;   --decrypt
+-f      ;   --file
+-dir    ;   --directory
+-efn    ;   --encrypt_filename
+-dfn    ;   --decrypt_filename
+-str    ;   --string
+-p      ;   --password
 
 ```
