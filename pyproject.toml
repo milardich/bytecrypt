@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bytecrypt"
-version = "0.2.1"
-description = "Easily encrypt/decrypt bytes with password"
+version = "0.3.1"
+description = "Easily encrypt/decrypt data with password"
 readme = "README.md"
 license = { file = "LICENSE" }
 classifiers = [
