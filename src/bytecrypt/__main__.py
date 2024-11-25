@@ -14,13 +14,6 @@ import sys
 # e.g. -e -dir "test/directory1","testdir2" -p "test"
 # e.g. -e -dir "test/secret.txt","binary.exe" -p "test"
 
-### TODO
-## recursive dir encrypt
-# -r    || --recursive  (loops thru all dirs)
-
-### TODO
-# refactor everything
-
 def init_argparse() -> ArgumentParser:
     parser = ArgumentParser(
         prog="Bytecrypt",
