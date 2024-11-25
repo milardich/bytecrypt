@@ -31,29 +31,27 @@ def init_argparse() -> ArgumentParser:
     return parser
 
 
+'''
+dir_action      -> encrypt_directory or decrypt_directory : function
+file_action     -> encrypt_file or decrypt_file : function
+string_action   -> encrypt_string or decrypt_string : function
+'''
+def process_action(dir_action, file_action, string_action, args):
+    string = args.string
+    file = args.file
+    directory = args.directory
+    recursive = args.recursive
+    password = args.password
+    name_action = args.encrypt_filename or args.decrypt_filename
 
-def process_encrypting(args):
-    if (args.directory and not args.file and not args.string):
-        encrypt_directory(args.directory, bytes(args.password, encoding="utf-8"), args.encrypt_filename, args.recursive)
-    elif (args.file and not args.directory and not args.string):
-        encrypt_file(args.file, bytes(args.password, encoding="utf-8"), args.encrypt_filename)
-    elif (args.string and not args.directory and not args.file):
-        encrypt_string(args.string, bytes(args.password, encoding="utf-8"))
+    if (directory):
+        dir_action(directory, bytes(password, encoding="utf-8"), name_action, recursive)
+    elif (file):
+        file_action(file, bytes(password, encoding="utf-8"), name_action)
+    elif (string):
+        string_action(string, bytes(password, encoding="utf-8"))
     else:
         print("\nWarning: passed more than one data argument (-dir, -file, -str)")
-
-
-
-def process_decrypting(args):
-    if (args.directory and not args.file and not args.string):
-        decrypt_directory(args.directory, bytes(args.password, encoding="utf-8"), args.decrypt_filename, args.recursive)
-    elif (args.file and not args.directory and not args.string):
-        decrypt_file(args.file, bytes(args.password, encoding="utf-8"), args.decrypt_filename)
-    elif (args.string and not args.directory and not args.file):
-        decrypt_string(args.string, bytes(args.password, encoding="utf-8"))
-    else:
-        print("\nWarning: passed more than one data argument (-dir, -file, -str)")
-
 
 
 def print_example():
@@ -67,7 +65,6 @@ def print_example():
     print("bytecrypt -d -str \"EiDXFN...yUW0=\" -p testpassword")
 
 
-
 def check_args(args) -> bool:
     encrypting = args.encrypt
     decrypting = args.decrypt
@@ -76,6 +73,7 @@ def check_args(args) -> bool:
     encrypt_filename = args.encrypt_filename
     decrypt_filename = args.decrypt_filename
     directory = args.directory
+    recursive = args.recursive
     password = args.password
 
     if (not file and not directory and not string):
@@ -117,7 +115,6 @@ def check_args(args) -> bool:
     return True
 
 
-
 def main():
     parser = init_argparse()
     args = parser.parse_args()
@@ -125,9 +122,19 @@ def main():
 
     if (valid_args):
         if (args.encrypt):
-            process_encrypting(args)
+            process_action(
+                encrypt_directory,
+                encrypt_file,
+                encrypt_string,
+                args
+            )
         elif (args.decrypt):
-            process_decrypting(args)
+            process_action(
+                decrypt_directory,
+                decrypt_file,
+                decrypt_string,
+                args
+            )
     else:
         print("\nError: invalid arguments.")
         sys.exit(0)
@@ -136,4 +143,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
