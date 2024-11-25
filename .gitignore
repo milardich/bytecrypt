@@ -8,3 +8,5 @@ dist/
 src/bytecrypt.egg*
 build
 *.spec
+bin/
+lib*
