@@ -88,6 +88,9 @@ bytecrypt -e -dir . -p "test123"
 bytecrypt -e -dir . -p -efn "test123"
 bytecrypt -d -dir . -p -dfn "test123"
 
+# encrypt all directories inside of a directory (recursive)
+bytecrypt -e -dir "test/directory1" -r -p "test123"
+
 ```
 
 #### Command line arguments:
@@ -102,6 +105,7 @@ bytecrypt -d -dir . -p -dfn "test123"
 -efn    ;   --encrypt_filename
 -dfn    ;   --decrypt_filename
 -str    ;   --string
+-r      ;   --recursive
 -p      ;   --password
 
 ```
