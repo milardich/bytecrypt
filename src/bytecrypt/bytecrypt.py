@@ -45,7 +45,7 @@ def overwrite_file(file, content):
         file.write(content)
         file.truncate()
         file.close()
-        print("Info: encrypted bytes written successfully")
+        print("Info: Bytes written successfully")
     except IOError as err:
         print("\n" + err)
 
@@ -126,13 +126,52 @@ def decrypt_string(string: str, password: bytes | str):
     print("\nHEX:\n" + decrypted.hex())
 
 
-def encrypt_directory(path: str, password: bytes | str, encrypt_name=False):
+def encrypt_directory(path: str, password: bytes | str, encrypt_name=False, recursive=False):
     files = os.listdir(path)
-    for file in files:
-        encrypt_file(path + "/" + file, password, encrypt_name)
+    if (not recursive):
+        for file in files:
+            if (os.path.isfile(path + '/' + file)):
+                print("Encrypting file: " + path + '/' + file)
+                encrypt_file(path + "/" + file, password, encrypt_name)
+    else:
+        dir_paths = []
+        file_paths = []
+        for file in files:
+            if (os.path.isdir(path + '/' + file)):
+                dir_paths.append(path + '/' + file)
+            else:
+                file_paths.append(path + '/' + file)
+        if(len(file_paths) > 0):
+            for file in file_paths:
+                print("Encrypting file: " + file)
+                encrypt_file(file, password, encrypt_name)
+        if (len(dir_paths) > 0):
+            for dir in dir_paths:
+                print("Encrypting dir: " + dir)
+                encrypt_directory(dir, password, encrypt_name, recursive)
 
 
-def decrypt_directory(path: str, password: bytes | str, decrypt_name=False):
+
+def decrypt_directory(path: str, password: bytes | str, decrypt_name=False, recursive=False):
     files = os.listdir(path)
-    for file in files:
-        decrypt_file(path + "/" + file, password, decrypt_name)
+    if (not recursive):
+        for file in files:
+            if (os.path.isfile(path + '/' + file)):
+                print("Decrypting file: " + path + '/' + file)
+                decrypt_file(path + "/" + file, password, decrypt_name)
+    else:
+        dir_paths = []
+        file_paths = []
+        for file in files:
+            if (os.path.isdir(path + '/' + file)):
+                dir_paths.append(path + '/' + file)
+            else:
+                file_paths.append(path + '/' + file)
+        if(len(file_paths) > 0):
+            for file in file_paths:
+                print("Decrypting file: " + file)
+                decrypt_file(file, password, decrypt_name)
+        if (len(dir_paths) > 0):
+            for dir in dir_paths:
+                print("Decrypting dir: " + dir)
+                decrypt_directory(dir, password, decrypt_name, recursive)

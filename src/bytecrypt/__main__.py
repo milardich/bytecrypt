@@ -34,15 +34,14 @@ def init_argparse() -> ArgumentParser:
     parser.add_argument('-dfn', '--decrypt_filename', action='store_true')
     parser.add_argument('-str', '--string')
     parser.add_argument('-p', '--password', required=True)
-    # TODO: recursive dir file encryption
-    # parser.add_argument('-r', '--recursive', action='store_true')
+    parser.add_argument('-r', '--recursive', action='store_true')
     return parser
 
 
 
 def process_encrypting(args):
     if (args.directory and not args.file and not args.string):
-        encrypt_directory(args.directory, bytes(args.password, encoding="utf-8"), args.encrypt_filename)
+        encrypt_directory(args.directory, bytes(args.password, encoding="utf-8"), args.encrypt_filename, args.recursive)
     elif (args.file and not args.directory and not args.string):
         encrypt_file(args.file, bytes(args.password, encoding="utf-8"), args.encrypt_filename)
     elif (args.string and not args.directory and not args.file):
@@ -54,7 +53,7 @@ def process_encrypting(args):
 
 def process_decrypting(args):
     if (args.directory and not args.file and not args.string):
-        decrypt_directory(args.directory, bytes(args.password, encoding="utf-8"), args.decrypt_filename)
+        decrypt_directory(args.directory, bytes(args.password, encoding="utf-8"), args.decrypt_filename, args.recursive)
     elif (args.file and not args.directory and not args.string):
         decrypt_file(args.file, bytes(args.password, encoding="utf-8"), args.decrypt_filename)
     elif (args.string and not args.directory and not args.file):
@@ -129,7 +128,6 @@ def check_args(args) -> bool:
 def main():
     parser = init_argparse()
     args = parser.parse_args()
-    print(args)
     valid_args = check_args(args)
 
     if (valid_args):
