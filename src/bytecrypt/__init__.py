@@ -13,6 +13,8 @@ from .bytecrypt import (
     decrypt_string,
 )
 
+os.system("") # enables win 10 terminal colors for some reason
+
 __version__ = "0.0.0"
 data = None
 
