@@ -1,11 +1,13 @@
 ### About
 Bytecrypt is a python package for easy data encryption / decryption with password.
 
-### Installation
+### Download executable
+- [Windows](https://github.com/milardich/bytecrypt/releases/latest/download/bytecrypt.exe)
+- [Linux](https://github.com/milardich/bytecrypt/releases/latest/download/bytecrypt)
+
+### Package installation
 ```sh
-
 pip install bytecrypt
-
 ```
 
 ### Usage
@@ -51,11 +53,8 @@ encrypt_file("path/to/file/test.docx", b"testPassword", encrypt_filename=True)
 decrypt_file("path/to/file/test.docx", b"testPassword", decrypt_filename=True)
 
 # files in directory
-encrypt_directory("path/to/directory", b"testPassword")
-decrypt_directory("path/to/directory", b"testPassword")
-
-encrypt_directory("path/to/directory", b"testPassword", encrypt_filename=True)
-decrypt_directory("path/to/directory", b"testPassword", decrypt_filename=True)
+encrypt_directory("path/dir", b"pass", encrypt_filename=True, recursive=False)
+decrypt_directory("path/dir", b"pass", decrypt_filename=True, recursive=False)
 
 
 ```
@@ -84,9 +83,8 @@ bytecrypt -d -str "tYWHbf_...2dHSL=" -p "test123"
 # encrypt/decrypt files in directory
 bytecrypt -e -dir "test/directory1" -p "test123"
 bytecrypt -d -dir "test/directory1" -p "test123"
-bytecrypt -e -dir . -p "test123"
-bytecrypt -e -dir . -p -efn "test123"
-bytecrypt -d -dir . -p -dfn "test123"
+bytecrypt -e -dir "dir1/dir2" -p -efn "test123"
+bytecrypt -d -dir "dir1/dir2" -p -dfn "test123"
 
 # encrypt all directories inside of a directory (recursive)
 bytecrypt -e -dir "test/directory1" -r -p "test123"
