@@ -1,5 +1,3 @@
-from bytecrypt import encrypt_bytes
-from bytecrypt import decrypt_bytes
 from bytecrypt import encrypt_directory
 from bytecrypt import decrypt_directory
 from bytecrypt import encrypt_file
@@ -7,18 +5,18 @@ from bytecrypt import decrypt_file
 from bytecrypt import encrypt_string
 from bytecrypt import decrypt_string
 from argparse import ArgumentParser
+from bytecrypt.err_messages import *
 import sys
 
-### TODO
+# TODO
 # list of directories or files
 # e.g. -e -dir "test/directory1","testdir2" -p "test"
 # e.g. -e -dir "test/secret.txt","binary.exe" -p "test"
 
+
 def init_argparse() -> ArgumentParser:
-    parser = ArgumentParser(
-        prog="Bytecrypt",
-        description="Easy data encryption / decryption"
-    )
+    parser = ArgumentParser(prog="Bytecrypt",
+                            description="Easy data encryption / decryption")
     parser.add_argument('-e', '--encrypt', action='store_true')
     parser.add_argument('-d', '--decrypt', action='store_true')
     parser.add_argument('-f', '--file')
@@ -31,11 +29,9 @@ def init_argparse() -> ArgumentParser:
     return parser
 
 
-'''
-dir_action      -> encrypt_directory or decrypt_directory : function
-file_action     -> encrypt_file or decrypt_file : function
-string_action   -> encrypt_string or decrypt_string : function
-'''
+#dir_action      -> encrypt_directory or decrypt_directory : function
+#file_action     -> encrypt_file or decrypt_file : function
+#string_action   -> encrypt_string or decrypt_string : function
 def process_action(dir_action, file_action, string_action, args):
     string = args.string
     file = args.file
@@ -45,13 +41,14 @@ def process_action(dir_action, file_action, string_action, args):
     name_action = args.encrypt_filename or args.decrypt_filename
 
     if (directory):
-        dir_action(directory, bytes(password, encoding="utf-8"), name_action, recursive)
+        dir_action(directory, bytes(password, encoding="utf-8"), name_action,
+                   recursive)
     elif (file):
         file_action(file, bytes(password, encoding="utf-8"), name_action)
     elif (string):
         string_action(string, bytes(password, encoding="utf-8"))
     else:
-        print("\nWarning: passed more than one data argument (-dir, -file, -str)")
+        print_err(ERR_4)
 
 
 def print_example():
@@ -77,39 +74,39 @@ def check_args(args) -> bool:
     password = args.password
 
     if (not file and not directory and not string):
-        print("\nWarning: missing -f FILE, -dir DIRECTORY or -str STRING option.")
+        print_err(ERR_0)
         print_example()
         return False
     if (encrypting and decrypting):
-        print("\nWarning: pass only one flag (-e ENCRYPT or -d DECRYPT flag), not both.")
+        print_err(ERR_1)
         print_example()
         return False
     if (encrypt_filename and decrypt_filename):
-        print("\nWarning: (OPTIONAL) pass only one option (-efn ENCRYPT_FILENAME or -dfn DECRYPT_FILENAME flag.), not both.")
+        print_err(ERR_2)
         print_example()
         return False
     if (not password):
-        print("\nWarning: -p PASSWORD is required.")
+        print_err(ERR_3)
         print_example()
         return False
     if (file and directory):
-        print("\nWarning: pass only one option (-f FILE, -d DIRECTORY, -str STRING)")
+        print_err(ERR_4)
         print_example()
         return False
     if (file and string):
-        print("\nWarning: pass only one option (-f FILE, -d DIRECTORY, -str STRING)")
+        print_err(ERR_4)
         print_example()
         return False
     if (string and directory):
-        print("\nWarning: pass only one option (-f FILE, -d DIRECTORY, -str STRING)")
+        print_err(ERR_4)
         print_example()
         return False
     if (encrypting and decrypt_filename):
-        print("\nWarning: encrypting data and decrypting filename is not allowed")
+        print_err(ERR_5)
         print_example()
         return False
     if (decrypting and encrypt_filename):
-        print("\nWarning: decrypting data and encrypting filename is not allowed")
+        print_err(ERR_6)
         print_example()
         return False
     return True
@@ -122,23 +119,14 @@ def main():
 
     if (valid_args):
         if (args.encrypt):
-            process_action(
-                encrypt_directory,
-                encrypt_file,
-                encrypt_string,
-                args
-            )
+            process_action(encrypt_directory, encrypt_file, encrypt_string,
+                           args)
         elif (args.decrypt):
-            process_action(
-                decrypt_directory,
-                decrypt_file,
-                decrypt_string,
-                args
-            )
+            process_action(decrypt_directory, decrypt_file, decrypt_string,
+                           args)
     else:
-        print("\nError: invalid arguments.")
+        print_err(ERR_7)
         sys.exit(0)
-
 
 
 if __name__ == "__main__":
