@@ -1,0 +1,6 @@
+# Source distribution contents (the wheel ships only src/bytecrypt). Include the
+# test suite + regression vectors so the backward-compat guardrail travels with
+# the source, plus the user-facing docs that README links to.
+include CHANGELOG.md FORMAT.md
+recursive-include tests *.py
+recursive-include tests/vectors *

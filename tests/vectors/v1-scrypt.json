@@ -1,0 +1,24 @@
+{
+  "_comment": "Version-1 (scrypt) bytecrypt blob; see README.md. Do NOT regenerate to make a test pass -- a failure is a real bug.",
+  "file": "v1-scrypt.bin",
+  "format": "version-1",
+  "format_version": 1,
+  "source_package": "bytecrypt 1.0 (this repository)",
+  "kdf": {
+    "algorithm": "scrypt",
+    "n": 131072,
+    "r": 8,
+    "p": 1,
+    "key_length": 32,
+    "salt_len": 16,
+    "salt_location": "bytes 5:21 (after magic(4) + version(1))"
+  },
+  "cipher": "Fernet (AES-128-CBC + HMAC-SHA256)",
+  "password_utf8": "correct horse battery staple",
+  "plaintext_utf8": "bytecrypt v1 (scrypt) regression vector\nUnicode: café · 日本語 · 🔐\n",
+  "plaintext_hex": "6279746563727970742076312028736372797074292072656772657373696f6e20766563746f720a556e69636f64653a20636166c3a920c2b720e697a5e69cace8aa9e20c2b720f09f94900a",
+  "plaintext_sha256": "b4bd70eb6a16e5850a0fc1b43201b49cf5f61627c90350ad593f5ced4b1b4a24",
+  "blob_len": 205,
+  "blob_sha256": "ddb24e3a8d564e2912af5c078415577880344abc7ddb6edc1f96864075a689b4",
+  "generated_utc": "2026-05-26"
+}

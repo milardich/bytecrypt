@@ -1,132 +1,184 @@
-from bytecrypt import encrypt_directory
-from bytecrypt import decrypt_directory
-from bytecrypt import encrypt_file
-from bytecrypt import decrypt_file
-from bytecrypt import encrypt_string
-from bytecrypt import decrypt_string
-from argparse import ArgumentParser
-from bytecrypt.err_messages import *
-import sys
+"""
+Command line interface for bytecrypt.
+"""
 
-# TODO
-# list of directories or files
-# e.g. -e -dir "test/directory1","testdir2" -p "test"
-# e.g. -e -dir "test/secret.txt","binary.exe" -p "test"
+import getpass
+import os
+import sys
+from argparse import ArgumentParser
+
+from bytecrypt import (
+    BytecryptError,
+    decrypt_directory,
+    decrypt_file,
+    decrypt_string,
+    encrypt_directory,
+    encrypt_file,
+    encrypt_string,
+    reencrypt_directory,
+    reencrypt_file,
+)
+from bytecrypt.err_messages import (
+    ERR_BOTH_FILENAME,
+    ERR_DEC_WITH_EFN,
+    ERR_ENC_WITH_DFN,
+    ERR_FILENAME_WITH_STRING,
+    ERR_NO_TARGET,
+    print_err,
+    print_info,
+)
 
 
 def init_argparse() -> ArgumentParser:
-    parser = ArgumentParser(prog="Bytecrypt",
-                            description="Easy data encryption / decryption")
-    parser.add_argument('-e', '--encrypt', action='store_true')
-    parser.add_argument('-d', '--decrypt', action='store_true')
-    parser.add_argument('-f', '--file')
-    parser.add_argument('-dir', '--directory')
-    parser.add_argument('-efn', '--encrypt_filename', action='store_true')
-    parser.add_argument('-dfn', '--decrypt_filename', action='store_true')
-    parser.add_argument('-str', '--string')
-    parser.add_argument('-p', '--password', required=True)
-    parser.add_argument('-r', '--recursive', action='store_true')
+    parser = ArgumentParser(
+        prog="bytecrypt",
+        description="Encrypt and decrypt data with a password.")
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("-e",
+                      "--encrypt",
+                      action="store_true",
+                      help="encrypt the target")
+    mode.add_argument("-d",
+                      "--decrypt",
+                      action="store_true",
+                      help="decrypt the target")
+    mode.add_argument(
+        "--reencrypt",
+        action="store_true",
+        help="write the target again in the current format, or change the "
+        "password with --new-password")
+
+    target = parser.add_mutually_exclusive_group()
+    target.add_argument("-f", "--file", help="use a file as the target")
+    target.add_argument("-dir",
+                        "--directory",
+                        help="use a directory as the target")
+    target.add_argument("-str", "--string", help="use a string as the target")
+
+    parser.add_argument("-efn",
+                        "--encrypt-filename",
+                        dest="encrypt_filename",
+                        action="store_true",
+                        help="encrypt the file name too")
+    parser.add_argument("-dfn",
+                        "--decrypt-filename",
+                        dest="decrypt_filename",
+                        action="store_true",
+                        help="decrypt the file name too")
+    parser.add_argument("-p",
+                        "--password",
+                        help="the password (bytecrypt asks for it if you omit "
+                        "this option)")
+    parser.add_argument("-np",
+                        "--new-password",
+                        help="the new password, with --reencrypt")
+    parser.add_argument("-r",
+                        "--recursive",
+                        action="store_true",
+                        help="include the subdirectories")
+    parser.add_argument("-F",
+                        "--force",
+                        action="store_true",
+                        help="encrypt the data again, also when it is already "
+                        "encrypted")
     return parser
 
 
-#dir_action      -> encrypt_directory or decrypt_directory : function
-#file_action     -> encrypt_file or decrypt_file : function
-#string_action   -> encrypt_string or decrypt_string : function
-def process_action(dir_action, file_action, string_action, args):
-    string = args.string
-    file = args.file
-    directory = args.directory
-    recursive = args.recursive
-    password = args.password
-    name_action = args.encrypt_filename or args.decrypt_filename
-
-    if (directory):
-        dir_action(directory, bytes(password, encoding="utf-8"), name_action,
-                   recursive)
-    elif (file):
-        file_action(file, bytes(password, encoding="utf-8"), name_action)
-    elif (string):
-        string_action(string, bytes(password, encoding="utf-8"))
-    else:
-        print_err(ERR_4)
-
-
-def print_example():
-    print("\nEncryption examples:")
-    print("bytecrypt -e -f test.txt -p testpassword")
-    print("bytecrypt -e -dir example/dir/test -p testpassword")
-    print("bytecrypt -e -str \"secret text\" -p testpassword")
-    print("\nDecryption examples:")
-    print("bytecrypt -d -f test.txt -p testpassword")
-    print("bytecrypt -d -dir example/dir/test -p testpassword")
-    print("bytecrypt -d -str \"EiDXFN...yUW0=\" -p testpassword")
+def print_example() -> None:
+    print("\nExamples:")
+    print("  bytecrypt -e -f secret.txt -p mypassword")
+    print("  bytecrypt -d -f secret.txt           "
+          "(bytecrypt asks for the password)")
+    print("  bytecrypt -e -dir my/directory -r -p mypassword")
+    print("  bytecrypt -e -str \"secret text\" -p mypassword")
+    print("  bytecrypt --reencrypt -f old.txt -p oldpw -np newpw")
 
 
 def check_args(args) -> bool:
-    encrypting = args.encrypt
-    decrypting = args.decrypt
-    string = args.string
-    file = args.file
-    encrypt_filename = args.encrypt_filename
-    decrypt_filename = args.decrypt_filename
-    directory = args.directory
-    recursive = args.recursive
-    password = args.password
-
-    if (not file and not directory and not string):
-        print_err(ERR_0)
-        print_example()
+    if not (args.encrypt or args.decrypt or args.reencrypt):
+        print_err("pass one of -e/--encrypt, -d/--decrypt or --reencrypt")
         return False
-    if (encrypting and decrypting):
-        print_err(ERR_1)
-        print_example()
+    if not (args.file or args.directory or args.string):
+        print_err(ERR_NO_TARGET)
         return False
-    if (encrypt_filename and decrypt_filename):
-        print_err(ERR_2)
-        print_example()
+    if args.encrypt_filename and args.decrypt_filename:
+        print_err(ERR_BOTH_FILENAME)
         return False
-    if (not password):
-        print_err(ERR_3)
-        print_example()
+    if args.string and (args.encrypt_filename or args.decrypt_filename):
+        print_err(ERR_FILENAME_WITH_STRING)
         return False
-    if (file and directory):
-        print_err(ERR_4)
-        print_example()
+    if args.encrypt and args.decrypt_filename:
+        print_err(ERR_ENC_WITH_DFN)
         return False
-    if (file and string):
-        print_err(ERR_4)
-        print_example()
-        return False
-    if (string and directory):
-        print_err(ERR_4)
-        print_example()
-        return False
-    if (encrypting and decrypt_filename):
-        print_err(ERR_5)
-        print_example()
-        return False
-    if (decrypting and encrypt_filename):
-        print_err(ERR_6)
-        print_example()
+    if args.decrypt and args.encrypt_filename:
+        print_err(ERR_DEC_WITH_EFN)
         return False
     return True
 
 
-def main():
-    parser = init_argparse()
-    args = parser.parse_args()
-    valid_args = check_args(args)
+def resolve_password(args, confirm: bool) -> str:
+    if args.password is not None:
+        return args.password
+    password = getpass.getpass("Password: ")
+    if confirm and password != getpass.getpass("Confirm password: "):
+        raise BytecryptError("passwords do not match")
+    return password
 
-    if (valid_args):
-        if (args.encrypt):
-            process_action(encrypt_directory, encrypt_file, encrypt_string,
-                           args)
-        elif (args.decrypt):
-            process_action(decrypt_directory, decrypt_file, decrypt_string,
-                           args)
-    else:
-        print_err(ERR_7)
-        sys.exit(0)
+
+def run(args) -> None:
+    name_action = args.encrypt_filename or args.decrypt_filename
+
+    if args.encrypt:
+        password = resolve_password(args, confirm=True)
+        if args.directory:
+            encrypt_directory(args.directory, password, name_action,
+                              args.recursive, args.force)
+        elif args.file:
+            encrypt_file(args.file,
+                         password,
+                         encrypt_filename=name_action,
+                         force=args.force)
+        else:
+            print(encrypt_string(args.string, password))
+
+    elif args.decrypt:
+        password = resolve_password(args, confirm=False)
+        if args.directory:
+            decrypt_directory(args.directory, password, name_action,
+                              args.recursive)
+        elif args.file:
+            decrypt_file(args.file, password, decrypt_filename=name_action)
+        else:
+            print(decrypt_string(args.string, password))
+
+    else:  # --reencrypt
+        if args.string:
+            raise BytecryptError("--reencrypt applies to -f/-dir, not -str")
+        password = resolve_password(args, confirm=False)
+        if args.directory:
+            count = reencrypt_directory(args.directory, password,
+                                        args.new_password, args.recursive)
+            print_info("re-encrypted %d file(s)" % count)
+        else:
+            changed = reencrypt_file(args.file, password, args.new_password)
+            print_info("re-encrypted" if changed else "already at the current "
+                       "version, file unchanged")
+
+
+def main() -> None:
+    if os.name == "nt":
+        os.system("")  # enable ANSI colors on legacy Windows 10 terminals
+
+    args = init_argparse().parse_args()
+    if not check_args(args):
+        print_example()
+        sys.exit(2)
+
+    try:
+        run(args)
+    except (BytecryptError, OSError) as err:
+        print_err("error: " + str(err))
+        sys.exit(1)
 
 
 if __name__ == "__main__":

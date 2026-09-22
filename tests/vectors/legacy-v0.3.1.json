@@ -1,0 +1,23 @@
+{
+  "_comment": "Genuine legacy bytecrypt blob; see README.md. Do NOT regenerate to make a test pass -- a wrong-password/corruption failure is a real bug.",
+  "file": "legacy-v0.3.1.bin",
+  "format": "legacy",
+  "source_version": "0.3.1",
+  "source_git_ref": "v0.3.1",
+  "kdf": {
+    "algorithm": "PBKDF2-HMAC-SHA512",
+    "iterations": 1000,
+    "key_length": 32,
+    "salt_len": 16,
+    "salt_location": "prepended (bytes 0:16)"
+  },
+  "cipher": "Fernet (AES-128-CBC + HMAC-SHA256)",
+  "password_utf8": "correct horse battery staple",
+  "plaintext_utf8": "bytecrypt legacy regression vector\nUnicode: café · naïve · 日本語 · 🔐\n",
+  "plaintext_hex": "627974656372797074206c65676163792072656772657373696f6e20766563746f720a556e69636f64653a20636166c3a920c2b7206e61c3af766520c2b720e697a5e69cace8aa9e20c2b720f09f94900a",
+  "plaintext_sha256": "ffa94f094cb1f78d178657f07a7a8c923698668b12b7c64881d0bd2561ec5733",
+  "blob_len": 220,
+  "blob_sha256": "6681f72d63dafdf59d7813921de07624e28b68049742e14c0148d7e22f05e0ac",
+  "generated_utc": "2026-05-26",
+  "note": "0.3.2 was never released; v0.3.1 is the latest PyPI release. The legacy on-disk format is identical across all 0.x."
+}

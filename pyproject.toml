@@ -4,19 +4,48 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bytecrypt"
-version = "0.3.2"
-description = "Easily encrypt/decrypt data with password"
+version = "1.0.0"
+description = "Encrypt and decrypt data with a password"
 readme = "README.md"
 license = { file = "LICENSE" }
 classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
     "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Security :: Cryptography",
 ]
-keywords = ["encrypt", "decrypt", "bytecrypt", "encryption", "decryption"]
+keywords = ["encrypt", "decrypt", "bytecrypt", "encryption", "decryption", "scrypt", "fernet"]
 
 dependencies = [
     "cryptography",
 ]
 
-requires-python = ">=3.9"
+# cryptography 48 ships a cp311 abi3 wheel, so 3.11 is the real floor.
+requires-python = ">=3.11"
+
+[project.scripts]
+bytecrypt = "bytecrypt.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/milardich/bytecrypt"
+Repository = "https://github.com/milardich/bytecrypt"
+Issues = "https://github.com/milardich/bytecrypt/issues"
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.yapf]
+based_on_style = "pep8"
+column_limit = 79
