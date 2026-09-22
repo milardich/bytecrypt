@@ -47,5 +47,4 @@ testpaths = ["tests"]
 addopts = "-ra"
 
 [tool.yapf]
-based_on_style = "pep8"
-column_limit = 79
+based_on_style = "facebook"

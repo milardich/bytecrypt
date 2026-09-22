@@ -29,19 +29,19 @@ def test_at_least_one_vector_present():
     assert MANIFESTS, "no regression vectors found under tests/vectors/"
 
 
-@pytest.mark.parametrize("manifest_path",
-                         MANIFESTS,
-                         ids=[os.path.basename(p) for p in MANIFESTS])
+@pytest.mark.parametrize(
+    "manifest_path", MANIFESTS, ids=[os.path.basename(p) for p in MANIFESTS]
+)
 def test_vector_decrypts(manifest_path):
     with open(manifest_path, encoding="utf-8") as f:
         manifest = json.load(f)
 
     blob = open(os.path.join(VECTOR_DIR, manifest["file"]), "rb").read()
     assert hashlib.sha256(blob).hexdigest() == manifest["blob_sha256"], (
-        "vector .bin has been altered: restore it, do not regenerate")
+        "vector .bin has been altered: restore it, do not regenerate"
+    )
 
     plaintext = decrypt_bytes(blob, manifest["password_utf8"].encode("utf-8"))
 
     assert plaintext == bytes.fromhex(manifest["plaintext_hex"])
-    assert hashlib.sha256(
-        plaintext).hexdigest() == manifest["plaintext_sha256"]
+    assert hashlib.sha256(plaintext).hexdigest() == manifest["plaintext_sha256"]

@@ -10,10 +10,12 @@ import sys
 
 
 def _run(args, cwd):
-    return subprocess.run([sys.executable, "-m", "bytecrypt", *args],
-                          cwd=str(cwd),
-                          capture_output=True,
-                          text=True)
+    return subprocess.run(
+        [sys.executable, "-m", "bytecrypt", *args],
+        cwd=str(cwd),
+        capture_output=True,
+        text=True
+    )
 
 
 def test_cli_file_roundtrip(tmp_path):

@@ -26,10 +26,12 @@ VECTOR_DIR = Path(__file__).parent / "vectors"
 
 def _legacy_vector():
     manifest = json.loads(
-        (VECTOR_DIR / "legacy-v0.3.1.json").read_text(encoding="utf-8"))
+        (VECTOR_DIR / "legacy-v0.3.1.json").read_text(encoding="utf-8")
+    )
     blob = (VECTOR_DIR / manifest["file"]).read_bytes()
     return blob, manifest["password_utf8"], bytes.fromhex(
-        manifest["plaintext_hex"])
+        manifest["plaintext_hex"]
+    )
 
 
 def test_reencrypt_legacy_to_v1(tmp_path):
@@ -66,8 +68,9 @@ def test_reencrypt_changes_password(tmp_path):
     p = tmp_path / "f.bin"
     p.write_bytes(encrypt_bytes(b"top secret", "old-password"))
 
-    assert reencrypt_file(str(p), "old-password",
-                          new_password="new-password") is True
+    assert reencrypt_file(
+        str(p), "old-password", new_password="new-password"
+    ) is True
 
     with pytest.raises(InvalidPasswordError):
         decrypt_file(str(p), "old-password")

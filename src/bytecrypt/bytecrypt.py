@@ -18,7 +18,6 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 
-
 # --- format constants (FORMAT.md) -------------------------------------------
 
 MAGIC = b"\x00BCY"  # leading NUL: a legacy blob can never start with it
@@ -26,12 +25,11 @@ VERSION_SCRYPT = 1
 _MAGIC_LEN = len(MAGIC)
 _HEADER_LEN = _MAGIC_LEN + 1
 SALT_LEN = 16
-_MIN_LEGACY_LEN = SALT_LEN + 100 # 100 is the shortest Fernet token (empty plaintext), so a headerless input below this length cannot be a legacy blob.
+_MIN_LEGACY_LEN = SALT_LEN + 100  # 100 is the shortest Fernet token (empty plaintext), so a headerless input below this length cannot be a legacy blob.
 MAX_FILENAME_LEN = 255  # path component limit on most file systems
 
-
-
 # --- errors -----------------------------------------------------------------
+
 
 class BytecryptError(Exception):
     """Base class for all errors raised by bytecrypt."""
@@ -39,14 +37,12 @@ class BytecryptError(Exception):
 
 class NotBytecryptFileError(BytecryptError):
     """The input is too short, or it is not a known bytecrypt blob."""
-
     def __init__(self, message="not a bytecrypt-encrypted file"):
         super().__init__(message)
 
 
 class UnsupportedFormatError(BytecryptError):
     """The blob declares a format version that this bytecrypt does not know."""
-
     def __init__(self, version=None):
         self.version = version
         msg = "file was created by a newer version of bytecrypt; upgrade it" \
@@ -58,34 +54,33 @@ class UnsupportedFormatError(BytecryptError):
 
 class InvalidPasswordError(BytecryptError):
     """The authentication failed: wrong password, or a changed file."""
-
     def __init__(self, message="wrong password or corrupted file"):
         super().__init__(message)
 
 
 class AlreadyEncryptedError(BytecryptError):
     """bytecrypt refuses to encrypt data that is already a bytecrypt blob."""
-
     def __init__(self, path=None):
         self.path = path
         target = repr(path) if path is not None else "input"
         super().__init__(
             "%s is already bytecrypt-encrypted (pass force=True / --force to "
-            "re-encrypt)" % target)
+            "re-encrypt)" % target
+        )
 
 
 class FileNameTooLongError(BytecryptError):
     """The encrypted file name is longer than the file system limit."""
-
     def __init__(self, length):
         self.length = length
         super().__init__(
             "encrypted filename would be %d chars (limit is %d); encrypt the "
-            "file without name encryption" % (length, MAX_FILENAME_LEN))
-
+            "file without name encryption" % (length, MAX_FILENAME_LEN)
+        )
 
 
 # --- key derivation ---------------------------------------------------------
+
 
 def _coerce_password(password) -> bytes:
     if isinstance(password, str):
@@ -99,10 +94,9 @@ def _derive_key_scrypt(password: bytes, salt: bytes) -> bytes:
 
 
 def _derive_key_legacy(password: bytes, salt: bytes) -> bytes:
-    kdf = PBKDF2HMAC(algorithm=hashes.SHA512(),
-                     length=32,
-                     salt=salt,
-                     iterations=1000)
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA512(), length=32, salt=salt, iterations=1000
+    )
     return base64.urlsafe_b64encode(kdf.derive(password))
 
 
@@ -110,9 +104,8 @@ def _derive_key_legacy(password: bytes, salt: bytes) -> bytes:
 # must not be able to demand a huge allocation (FORMAT.md 1.2).
 _KDF_REGISTRY = {VERSION_SCRYPT: _derive_key_scrypt}
 
-
-
 # --- core primitives --------------------------------------------------------
+
 
 def encrypt_bytes(content: bytes, password) -> bytes:
     """Encrypt ``content`` into a version 1 blob (scrypt + Fernet)."""
@@ -155,11 +148,11 @@ def looks_encrypted(content: bytes) -> bool:
     return content[:_MAGIC_LEN] == MAGIC
 
 
-
 # --- transportable text encoding (strings and file names) -------------------
 
-# A v1 blob is binary (leading NUL, raw salt), so strings and file names carry it base64-encoded. 
+# A v1 blob is binary (leading NUL, raw salt), so strings and file names carry it base64-encoded.
 # Decoding also accepts a raw legacy token, which 0.x wrote as text directly.
+
 
 def _encode_blob(blob: bytes) -> str:
     return base64.urlsafe_b64encode(blob).decode("ascii")
@@ -185,8 +178,8 @@ def decrypt_string(token: str, password) -> str:
     return decrypt_bytes(_decode_token(token), password).decode("utf-8")
 
 
-
 # --- filesystem helpers -----------------------------------------------------
+
 
 def _atomic_write(path: str, data: bytes) -> None:
     """Write ``data`` to ``path`` atomically, so a crash cannot truncate it."""
@@ -207,10 +200,7 @@ def _atomic_write(path: str, data: bytes) -> None:
 
 
 def encrypt_file(
-    path: str,
-    password,
-    encrypt_filename=False,
-    force=False
+    path: str, password, encrypt_filename=False, force=False
 ) -> str:
     """Encrypt a file in place and return its (possibly renamed) path."""
     with open(path, "rb") as f:
@@ -257,8 +247,8 @@ def decrypt_file_name(path: str, password) -> str:
     return new_path
 
 
-
 # --- directories ------------------------------------------------------------
+
 
 def _iter_files(path: str, recursive: bool):
     """
@@ -300,18 +290,15 @@ def encrypt_directory(
 
 
 def decrypt_directory(
-    path: str,
-    password,
-    decrypt_filename=False,
-    recursive=False
+    path: str, password, decrypt_filename=False, recursive=False
 ) -> None:
     """Decrypt all files in a directory."""
     for f in list(_iter_files(path, recursive)):
         decrypt_file(f, password, decrypt_filename=decrypt_filename)
 
 
-
 # --- migration --------------------------------------------------------------
+
 
 def reencrypt_file(path: str, password, new_password=None) -> bool:
     """
@@ -322,8 +309,10 @@ def reencrypt_file(path: str, password, new_password=None) -> bool:
     """
     with open(path, "rb") as f:
         content = f.read()
-    already_current = (len(content) >= _HEADER_LEN and looks_encrypted(content)
-                       and content[_MAGIC_LEN] == VERSION_SCRYPT)
+    already_current = (
+        len(content) >= _HEADER_LEN and looks_encrypted(content) and
+        content[_MAGIC_LEN] == VERSION_SCRYPT
+    )
     if already_current and new_password is None:
         return False
     plaintext = decrypt_bytes(content, password)
@@ -333,10 +322,7 @@ def reencrypt_file(path: str, password, new_password=None) -> bool:
 
 
 def reencrypt_directory(
-    path: str,
-    password,
-    new_password=None,
-    recursive=False
+    path: str, password, new_password=None, recursive=False
 ) -> int:
     """Re-encrypt all files in a directory. Return the count of re-encrypts."""
     count = 0
