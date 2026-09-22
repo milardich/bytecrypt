@@ -2,7 +2,7 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/bytecrypt.svg)](https://pypi.org/project/bytecrypt/)
 [![Python versions](https://img.shields.io/pypi/pyversions/bytecrypt.svg)](https://pypi.org/project/bytecrypt/)
-[![CI](https://github.com/milardich/bytecrypt/actions/workflows/ci.yml/badge.svg)](https://github.com/milardich/bytecrypt/actions/workflows/ci.yml)
+[![CI](https://github.com/milarditch/bytecrypt/actions/workflows/ci.yml/badge.svg)](https://github.com/milarditch/bytecrypt/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 bytecrypt encrypts and decrypts bytes, strings, files and full directories with
@@ -66,8 +66,8 @@ If you do not have Python, download the latest single file executable:
 
 | Platform | Download |
 | --- | --- |
-| Windows | [bytecrypt.exe](https://github.com/milardich/bytecrypt/releases/latest/download/bytecrypt.exe) |
-| Linux | [bytecrypt](https://github.com/milardich/bytecrypt/releases/latest/download/bytecrypt) |
+| Windows | [bytecrypt.exe](https://github.com/milarditch/bytecrypt/releases/latest/download/bytecrypt.exe) |
+| Linux | [bytecrypt](https://github.com/milarditch/bytecrypt/releases/latest/download/bytecrypt) |
 
 ## Quick start
 
@@ -251,7 +251,7 @@ bytecrypt --reencrypt -dir my/directory -r -p mypassword
 ## Development
 
 ```sh
-git clone https://github.com/milardich/bytecrypt
+git clone https://github.com/milarditch/bytecrypt
 cd bytecrypt
 python -m pip install -e ".[test]"
 python -m pytest                   # run the test suite
@@ -264,4 +264,4 @@ is the format specification.
 
 ## License
 
-bytecrypt uses the [MIT license](LICENSE). Copyright milardich.
+bytecrypt uses the [MIT license](LICENSE). Copyright 2024-2026 Stjepan Milardić.
