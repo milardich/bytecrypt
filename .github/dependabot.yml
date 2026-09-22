@@ -1,0 +1,26 @@
+# Dependabot version updates. The security updates are a separate setting in
+# the repository, and they do not need this file.
+#
+# The workflows pin each action to a commit SHA, which never moves on its own.
+# Dependabot is what keeps those pins current: it opens a pull request with the
+# new SHA and the new version in the comment.
+
+version: 2
+
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    # One pull request for all actions, instead of one for each action.
+    groups:
+      actions:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
