@@ -4,6 +4,7 @@
 [![Python versions](https://img.shields.io/pypi/pyversions/bytecrypt.svg)](https://pypi.org/project/bytecrypt/)
 [![CI](https://github.com/milarditch/bytecrypt/actions/workflows/ci.yml/badge.svg)](https://github.com/milarditch/bytecrypt/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/bytecrypt?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/bytecrypt)
 
 bytecrypt encrypts and decrypts bytes, strings, files and full directories with
 a password. It is a Python library and a command line tool.
